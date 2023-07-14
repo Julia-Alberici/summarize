@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import { copy, linkIcon, loader, tick } from '../assets';
+import { copy, linkIcon, loader, tick, send } from '../assets';
 import { useLazyGetSummaryQuery } from '../services/article';
 
 export interface IArticle {
@@ -50,9 +50,8 @@ const Demo = () => {
           <img src={linkIcon} alt='link icon' className="absolute left-0 my-2 ml-3 w-5" />
 
           <input type="url" placeholder='Enter a URL' value={article.url} onChange={e => setArticle({ ...article, url: e.target.value })} required className='url_input peer' />
-          {/* TODO - Change submit icon */}
           <button type="submit" className='submit_btn peer-focus:border-gray-700 peer-focus:text-gray-700'>
-            -{'>'}
+            <img src={send} alt='send icon' className="w-5 h-5 object-contain" />
           </button>
         </form>
         {/* Browse URL History */}
