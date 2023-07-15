@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 
 import { copy, linkIcon, loader, tick, send } from '../assets';
 import { useLazyGetSummaryQuery } from '../services/article';
+import { Button } from "@/components/ui/button";
+import { PaperPlaneIcon } from '@radix-ui/react-icons';
 
 export interface IArticle {
   url: string;
@@ -50,9 +52,9 @@ const Demo = () => {
           <img src={linkIcon} alt='link icon' className="absolute left-0 my-2 ml-3 w-5" />
 
           <input type="url" placeholder='Enter a URL' value={article.url} onChange={e => setArticle({ ...article, url: e.target.value })} required className='url_input peer' />
-          <button type="submit" className='submit_btn peer-focus:border-gray-700 peer-focus:text-gray-700'>
-            <img src={send} alt='send icon' className="w-5 h-5 object-contain" />
-          </button>
+          <Button variant="outline" type="submit" size="icon" className='submit_btn'>
+            <PaperPlaneIcon />
+          </Button>
         </form>
         {/* Browse URL History */}
         <div className="flex flex-col gap-1 max-h-60 overflow-y-auto">
