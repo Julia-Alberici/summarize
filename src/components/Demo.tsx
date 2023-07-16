@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import { copy, linkIcon, loader, tick, send } from '../assets';
+import { copy, linkIcon, loader, tick } from '../assets';
 import { useLazyGetSummaryQuery } from '../services/article';
 import { Button } from "@/components/ui/button";
 import { PaperPlaneIcon } from '@radix-ui/react-icons';

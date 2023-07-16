@@ -2,6 +2,7 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
 const rapidApiKey = import.meta.env.VITE_RAPID_API_ARTICLE_KEY;
 
+//docs https://rapidapi.com/restyler/api/article-extractor-and-summarizer
 export const articleApi = createApi({
     reducerPath: 'articleApi',
     baseQuery: fetchBaseQuery({
