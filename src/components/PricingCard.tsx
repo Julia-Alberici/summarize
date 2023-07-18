@@ -20,7 +20,7 @@ export interface IPricingCard {
 
 const PricingCard = (props: IPricingCard) => {
     return (
-        <Card className={`w-[380px] ${props.highlight ? 'border-indigo-700' : ''}`.trim()}>
+        <Card className={`w-[300px] sm:w-[380px] ${props.highlight ? 'border-indigo-700' : ''}`.trim()}>
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle>{props.title}</CardTitle>

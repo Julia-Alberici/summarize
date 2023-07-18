@@ -2,7 +2,8 @@
 module.exports = {
   darkMode: ["dark"],
   content: [
-    './src/app/**/*.{ts,tsx}', 
+    './src/**/*.{ts,tsx}',
+    './src/app/**/*.{ts,tsx}',
     './src/components/**/*.{ts,tsx}',
     './index.html'
 	],
