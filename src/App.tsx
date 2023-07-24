@@ -2,9 +2,9 @@ import './App.css';
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from './app/Home';
 import Pricing from './app/Pricing';
-import { logo } from './assets';
 import Login from './app/Login';
 import Register from './app/Register';
+import Navigation from './components/Navigation';
 
 const router = createBrowserRouter([
   {
@@ -35,18 +35,10 @@ const App = () => {
         </div>
 
         <div className="app">
-          <nav className="flex justify-between items-center w-full mb-10 pt-3">
-            <a href="/">
-              <img src={logo} alt="sumz logo" className="w-28 object-contain" />
-            </a>
-            {/* TODO - Fix link to repo */}
-            <div className="flex sm:justify-center space-x-4">
-              <a href='/pricing' className="rounded-lg px-3 py-1.5 text-slate-700 font-medium hover:bg-slate-100 hover:text-slate-900">Pricing</a>
-              <a href='/login' className='rounded-lg px-3 py-1.5 text-slate-700 font-medium hover:bg-slate-100 hover:text-slate-900'>Login</a>
-              <a href='/register' className='black_btn'>Sign Up</a>
-            </div>
-          </nav>
-          <RouterProvider router={router} />
+          <Navigation />
+          <section className="mt-28 w-full max-w-xl">
+            <RouterProvider router={router} />
+          </section>
         </div>
       </main>
     </div>

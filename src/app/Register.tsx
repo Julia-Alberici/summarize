@@ -88,7 +88,7 @@ const Register = () => {
                                 )}
                             />
                             <a href="#" className="text-indigo-500 font-medium text-sm !mt-4 flex justify-end">Forgot password?</a>
-                            <Button className="w-[100%]">Sign in</Button>
+                            <Button className="w-[100%]">Sign up</Button>
                         </form>
                     </Form>
                 </CardContent>
