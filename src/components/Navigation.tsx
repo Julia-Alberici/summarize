@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { logo } from '../assets';
-import { Separator } from './ui/separator';
+import { Separator } from './common/separator';
 
 const Navigation = () => {
     const [isMenuOpened, setIsMenuOpened] = useState(false)

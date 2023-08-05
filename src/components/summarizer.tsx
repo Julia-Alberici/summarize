@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
 import { copy, linkIcon, loader, tick } from '../assets';
-import { useLazyGetSummaryQuery } from '../services/article';
-import { Button } from "@/components/ui/button";
+import { useLazyGetSummaryQuery } from '../api/article';
+import { Button } from "@/components/common/button";
 import { PaperPlaneIcon } from '@radix-ui/react-icons';
 
 export interface IArticle {
@@ -10,7 +10,7 @@ export interface IArticle {
   summary: string;
 }
 
-const Demo = () => {
+const Summarizer = () => {
   const [article, setArticle] = useState<IArticle>({
     url: '',
     summary: ''
@@ -107,4 +107,4 @@ const Demo = () => {
   )
 }
 
-export default Demo
+export default Summarizer

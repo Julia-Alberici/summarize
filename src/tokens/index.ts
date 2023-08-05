@@ -1,1 +1,1 @@
-export * from './pricing.const';
+export * from './pricing.tokens';

@@ -1,11 +1,11 @@
 import * as React from "react"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/helpers/merge-tailwind-classes"
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-    error?: string | any;
-  }
+  error?: string | any;
+}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, error, ...props }, ref) => {

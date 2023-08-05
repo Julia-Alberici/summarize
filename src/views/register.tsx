@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/common/button"
 import {
     Form,
     FormControl,
@@ -6,14 +6,14 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
+} from "@/components/common/form"
+import { Input } from "@/components/common/input"
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/common/card"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
-import { supabase } from "@/supabaseClient"
+import { supabase } from "@/api/supabase-client"
 import { Plan } from "@/tokens"
 
 const formSchema = z.object({

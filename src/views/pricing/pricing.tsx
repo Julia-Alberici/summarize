@@ -1,5 +1,5 @@
-import PricingCard from "@/components/PricingCard"
 import { pricing } from "@/tokens"
+import PricingCard from "./components/pricing-card"
 
 const Pricing = () => {
     return (

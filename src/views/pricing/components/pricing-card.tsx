@@ -5,10 +5,10 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { Button } from "./ui/button";
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/common/card"
+import { Button } from "../../../components/common/button";
+import { Separator } from "@/components/common/separator"
+import { Badge } from "@/components/common/badge"
 
 export interface IPricingCard {
     title: string;
