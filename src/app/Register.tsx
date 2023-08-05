@@ -12,27 +12,51 @@ import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { supabase } from "@/supabaseClient"
+import { Plan } from "@/tokens"
 
 const formSchema = z.object({
-    name: z.string().min(2).max(50),
-    email: z.string().min(2).max(50),
-    password: z.string().min(2).max(50)
+    email: z.string().min(1, { message: "Email is required" }).email({
+        message: "Must be a valid email",
+    }),
+    password: z.string().min(2).max(50),
+    confirmPassword: z.string().min(2).max(50)
 })
 
+
 const Register = () => {
+    const [isLoading, setIsLoading] = useState(false);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
+        mode: "onBlur",
         defaultValues: {
-            name: "",
             email: "",
-            password: ""
+            password: "",
+            confirmPassword: ""
         },
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+        setIsLoading(true);
+        supabase.auth.signUp({ email: values.email, password: values.password })
+            .then((res) => {
+                console.log(res);
+                const { data, error } = res;
+                if (error) {
+                    console.log(error);
+                }
+                if (data.user) {
+                    supabase.from('users').insert([{ id: data.user.id, plan: Plan.Starter }]);
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+            }).finally(() => {
+                setIsLoading(false);
+            });
+
     }
 
     return (
@@ -47,23 +71,10 @@ const Register = () => {
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                             <FormField
                                 control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Name</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Enter your name" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Email</FormLabel>
+                                        <FormLabel required>Email</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Enter your email" {...field} />
                                         </FormControl>
@@ -76,19 +87,28 @@ const Register = () => {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Password</FormLabel>
+                                        <FormLabel required>Password</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="* * * * * * * *" {...field} />
+                                            <Input type="password" {...field} />
                                         </FormControl>
-                                        {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            <a href="#" className="text-indigo-500 font-medium text-sm !mt-4 flex justify-end">Forgot password?</a>
-                            <Button className="w-[100%]">Sign up</Button>
+                            <FormField
+                                control={form.control}
+                                name="confirmPassword"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel required>Confirm Password</FormLabel>
+                                        <FormControl>
+                                            <Input type="password" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button className="w-[100%]" type="submit">Sign up</Button>
                         </form>
                     </Form>
                 </CardContent>

@@ -19,3 +19,9 @@ export const pricing = [
         summAmount: 'Unlimited'
     }
 ]
+
+export enum Plan {
+    Starter,
+    Premium,
+    Pro
+}
