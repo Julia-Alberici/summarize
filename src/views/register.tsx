@@ -1,32 +1,28 @@
 import { Button } from "@/components/common/button"
 import {
     Form,
-    FormControl,
     FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+    FormInput,
 } from "@/components/common/form"
-import { Input } from "@/components/common/input"
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/common/card"
+import { Card, CardContent } from "@/components/common/card"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
 import { supabase } from "@/api/supabase-client"
 import { Plan } from "@/tokens"
+import VerifyEmail from "./verify-email"
+import { useState } from "react"
 
 const formSchema = z.object({
     email: z.string().min(1, { message: "Email is required" }).email({
         message: "Must be a valid email",
     }),
-    password: z.string().min(2).max(50),
-    confirmPassword: z.string().min(2).max(50)
+    password: z.string().min(8, "Password must be at least 8 characters")
 })
 
 
 const Register = () => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [confirmationSent, setConfirmationSent] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -34,29 +30,27 @@ const Register = () => {
         defaultValues: {
             email: "",
             password: "",
-            confirmPassword: ""
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        setIsLoading(true);
-        supabase.auth.signUp({ email: values.email, password: values.password })
-            .then((res) => {
-                console.log(res);
-                const { data, error } = res;
-                if (error) {
-                    console.log(error);
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            const authResponse = await supabase.auth.signUp({ email: values.email, password: values.password, options: { data: { plan: Plan.Starter } } })
+            const { data, error } = authResponse;
+            if (error) {
+                console.error(error);
+            }
+            if (data.user) {
+                const emailAccountExists = data.user.identities?.length === 0;
+                if (emailAccountExists) {
+                    form.setError('email', { message: 'An account with this email already exists' });
+                    return;
                 }
-                if (data.user) {
-                    supabase.from('users').insert([{ id: data.user.id, plan: Plan.Starter }]);
-                }
-            })
-            .catch((err) => {
-                console.error(err);
-            }).finally(() => {
-                setIsLoading(false);
-            });
-
+                setConfirmationSent(true);
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     return (
@@ -64,56 +58,30 @@ const Register = () => {
             <h1 className="text-4xl font-medium text-center">Let's create your account</h1>
             <h2 className="desc text-sm">Sign up to start summarize articles for free.</h2>
             <Card className="w-[380px] mt-8">
-                <CardHeader>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel required>Email</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Enter your email" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel required>Password</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="confirmPassword"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel required>Confirm Password</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <Button className="w-[100%]" type="submit">Sign up</Button>
-                        </form>
-                    </Form>
+                <CardContent className="py-12">
+                    {!confirmationSent
+                        ? <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormInput required label="Email" placeholder="you@example.com" type="email" {...field} />
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormInput required label="Password" placeholder="••••••••" type="password" {...field} />
+                                    )}
+                                />
+                                <Button disabled={!form.formState.isValid || form.formState.isSubmitting} className="w-[100%]" type="submit">Sign up</Button>
+                            </form>
+                        </Form>
+                        : <VerifyEmail />
+                    }
                 </CardContent>
-                <CardFooter>
-                </CardFooter>
             </Card>
             <p className="text-center mt-4">Already have an account? <a href="/login" className="text-indigo-500 hover:text-indigo-700 font-medium">Sign in</a></p>
         </div>
