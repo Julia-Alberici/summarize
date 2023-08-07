@@ -12,6 +12,7 @@ import {
 
 import { cn } from "@/helpers/merge-tailwind-classes"
 import { Label } from "@/components/common/label"
+import { Input, InputProps } from "./input"
 
 const Form = FormProvider
 
@@ -87,16 +88,17 @@ FormItem.displayName = "FormItem"
 interface ILabelProps extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
   required?: boolean
 }
+
 const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   ILabelProps
 >(({ className, required, children, ...props }, ref) => {
-  const { error, formItemId } = useFormField()
+  const { formItemId } = useFormField()
 
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-destructive", className)}
+      className={className}
       htmlFor={formItemId}
       children={required ? <p>{children} <span className="text-destructive">*</span></p> : children}
       {...props}
@@ -168,6 +170,30 @@ const FormMessage = React.forwardRef<
 })
 FormMessage.displayName = "FormMessage"
 
+interface IFormInputProps extends Omit<InputProps, 'error'> {
+  required?: boolean
+  label?: React.ReactNode
+}
+
+const FormInput = React.forwardRef<HTMLInputElement, IFormInputProps>(
+  ({ className, required, label, onChange, ...props }, ref) => {
+    const { error, name } = useFormField()
+    const { clearErrors } = useFormContext()
+
+    return (
+      <FormItem>
+        <FormLabel required={required}>{label}</FormLabel>
+        <FormControl>
+          <div>
+            <Input ref={ref} onChange={(e) => { clearErrors(name); onChange?.(e) }} className={cn(error && 'border-destructive', className)} {...props} />
+            <FormMessage />
+          </div>
+        </FormControl>
+      </FormItem>
+    )
+  })
+FormInput.displayName = "FormInput"
+
 export {
   useFormField,
   Form,
@@ -177,4 +203,5 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  FormInput
 }
