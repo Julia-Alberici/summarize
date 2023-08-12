@@ -30,7 +30,7 @@ const Summarizer = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const { data } = await getArticleSummary(article.url);
+    const data = await getArticleSummary(article.url);
 
     if (data?.summary) {
       const newArticle = { ...article, summary: data.summary };

@@ -1,3 +1,4 @@
+'use client'
 import {
     Card,
     CardContent,
@@ -11,7 +12,7 @@ import { Separator } from "@/components/common/separator"
 import { Badge } from "@/components/common/badge"
 
 export interface IPricingCard {
-    title: string;
+    name: string;
     description: string;
     price: number;
     summAmount: string;
@@ -23,7 +24,7 @@ const PricingCard = (props: IPricingCard) => {
         <Card className={`w-[300px] sm:w-[380px] ${props.highlight ? 'border-indigo-700' : ''}`.trim()}>
             <CardHeader>
                 <div className="flex justify-between items-center">
-                    <CardTitle>{props.title}</CardTitle>
+                    <CardTitle>{props.name}</CardTitle>
                     {props.highlight && <Badge>Most Popular</Badge>}
                 </div>
                 <CardDescription>{props.description}</CardDescription>
