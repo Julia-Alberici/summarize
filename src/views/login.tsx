@@ -12,6 +12,7 @@ import { Card, CardHeader, CardContent, CardFooter } from "@/components/common/c
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { supabase } from "@/api/supabase-client"
 
 const formSchema = z.object({
     email: z.string().min(2).max(50),
@@ -27,10 +28,19 @@ const Login = () => {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         console.log(values)
+        try {
+            const {
+              data: { user, session },
+              error
+            } = await supabase.auth.signInWithPassword({ ...values });
+            console.log('login', user, session, error)
+          } catch (error) {
+            console.log("login error", error);
+          }
     }
 
     return (
