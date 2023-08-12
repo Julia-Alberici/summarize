@@ -1,6 +1,8 @@
+'use client'
 import { useState } from 'react';
 import { logo } from '../assets';
 import { Separator } from './common/separator';
+import Image from 'next/image'
 
 const Navigation = () => {
     const [isMenuOpened, setIsMenuOpened] = useState(false)
@@ -8,7 +10,7 @@ const Navigation = () => {
     return (
         <nav className="flex justify-between items-center flex-wrap sm:flex-nowrap w-full pt-3 fixed">
             <a href="/">
-                <img src={logo} alt="sumz logo" className="w-28 object-contain" />
+                <Image src={logo} alt="sumz logo" className="w-28 object-contain" />
             </a>
             <button className={`block sm:hidden z-20 ${isMenuOpened ? 'opened' : ''}`.trim()} onClick={() => setIsMenuOpened(!isMenuOpened)}>
                 <span className="sr-only">Open main menu</span>

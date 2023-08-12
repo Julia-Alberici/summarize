@@ -1,3 +1,4 @@
+'use client';
 import { pricing } from "@/tokens"
 import PricingCard from "./components/pricing-card"
 

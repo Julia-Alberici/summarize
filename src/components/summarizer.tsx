@@ -1,9 +1,11 @@
+'use client'
 import { useState, useEffect } from 'react'
 
-import { copy, linkIcon, loader, tick } from '../assets';
-import { useLazyGetSummaryQuery } from '../api/article';
+import { loader } from '@/assets';
 import { Button } from "@/components/common/button";
-import { PaperPlaneIcon } from '@radix-ui/react-icons';
+import { CheckIcon, CopyIcon, Link1Icon, PaperPlaneIcon } from '@radix-ui/react-icons';
+import { useArticleContext } from '@/contexts/article-provider';
+import Image from 'next/image';
 
 export interface IArticle {
   url: string;
@@ -16,7 +18,7 @@ const Summarizer = () => {
     summary: ''
   })
   const [allArticles, setAllArticles] = useState<IArticle[]>([])
-  const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
+  const { getArticleSummary, error, isFetching } = useArticleContext();
   const [copied, setCopied] = useState('')
 
   useEffect(() => {
@@ -28,7 +30,7 @@ const Summarizer = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const { data } = await getSummary({ articleUrl: article.url });
+    const { data } = await getArticleSummary(article.url);
 
     if (data?.summary) {
       const newArticle = { ...article, summary: data.summary };
@@ -49,8 +51,7 @@ const Summarizer = () => {
     <>
       <div className="flex flex-col w-full gap-2">
         <form className='relative flex justify-center items-center' onSubmit={handleSubmit}>
-          <img src={linkIcon} alt='link icon' className="absolute left-0 my-2 ml-3 w-5" />
-
+          <Link1Icon className='absolute left-0 my-2 ml-3 w-5' />
           <input type="url" placeholder='Enter a URL' value={article.url} onChange={e => setArticle({ ...article, url: e.target.value })} required className='url_input peer' />
           <Button variant="outline" type="submit" size="icon" className='submit_btn'>
             <PaperPlaneIcon />
@@ -61,7 +62,9 @@ const Summarizer = () => {
           {allArticles.map((article, index) => (
             <div key={`link-${index}`} onClick={() => setArticle(article)} className="link_card">
               <div className="copy_btn" onClick={() => handleCopy(article.url)}>
-                <img src={copied === article.url ? tick : copy} alt='copy button' className='w-[40%] h-[40%] object-contain' />
+                {copied === article.url
+                  ? <CheckIcon className='w-[40%] h-[40%] object-contain' />
+                  : <CopyIcon className='w-[40%] h-[40%] object-contain' />}
               </div>
               <p className='flex-1 font-satoshi text-blue-700 font-medium text-sm truncate'>
                 {article.url}
@@ -74,7 +77,7 @@ const Summarizer = () => {
       {/* Display Results */}
       <div className="my-10 max-w-full flex justify-center items-center">
         {isFetching ? (
-          <img src={loader} alt="loader" className="w-20 h-20 object-contain" />
+          <Image src={loader} alt="loader" width={80} height={80} />
         ) : error ? (
           <p className='font-inter font-bold text-black text-center'>
             Well, this wasn't supposed to happen..

@@ -1,7 +1,7 @@
 import Summarizer from '@/components/summarizer'
 import Hero from '@/components/hero'
 
-const Home = () => {
+export default function Page() {
     return (
         <>
             <Hero />
@@ -9,5 +9,3 @@ const Home = () => {
         </>
     )
 }
-
-export default Home

@@ -1,3 +1,4 @@
+'use client';
 import { Button } from "@/components/common/button"
 import {
     Form,
@@ -10,7 +11,7 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { supabase } from "@/api/supabase-client"
 import { Plan } from "@/tokens"
-import VerifyEmail from "./verify-email"
+import VerifyEmail from "./components/verify-email"
 import { useState } from "react"
 
 const formSchema = z.object({
