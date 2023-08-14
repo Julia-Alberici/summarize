@@ -9,11 +9,12 @@ import {
     FormMessage,
 } from "@/components/common/form"
 import { Input } from "@/components/common/input"
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/common/card"
+import { Card, CardContent } from "@/components/common/card"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { supabase } from "@/api/supabase-client"
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
     email: z.string().min(2).max(50),
@@ -21,6 +22,7 @@ const formSchema = z.object({
 })
 
 const Login = () => {
+    const { push } = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -30,18 +32,16 @@ const Login = () => {
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
         try {
             const {
-              data: { user, session },
-              error
+                data: { user, session },
+                error
             } = await supabase.auth.signInWithPassword({ ...values });
             console.log('login', user, session, error)
-          } catch (error) {
+            push('/');
+        } catch (error) {
             console.log("login error", error);
-          }
+        }
     }
 
     return (
@@ -49,9 +49,7 @@ const Login = () => {
             <h1 className="text-4xl font-medium text-center">Welcome back</h1>
             <h2 className="desc text-sm">Welcome back! Please enter your details.</h2>
             <Card className="w-[380px] mt-8">
-                <CardHeader>
-                </CardHeader>
-                <CardContent>
+                <CardContent className="py-12">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                             <FormField
@@ -74,11 +72,8 @@ const Login = () => {
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="* * * * * * * *" {...field} />
+                                            <Input placeholder="••••••••" type="password" {...field} />
                                         </FormControl>
-                                        {/* <FormDescription>
-                                            This is your public display name.
-                                        </FormDescription> */}
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -88,8 +83,6 @@ const Login = () => {
                         </form>
                     </Form>
                 </CardContent>
-                <CardFooter>
-                </CardFooter>
             </Card>
             <p className="text-center mt-4">Don't have an account? <a href="/register" className="text-indigo-500 hover:text-indigo-700 font-medium">Sign up</a></p>
         </div>

@@ -1,8 +1,10 @@
+"use client";
 import { supabase } from "@/api/supabase-client";
+import { getUser } from "@/app/actions";
 import { User } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
 
-const AuthContext = createContext({});
+const AuthContext = createContext<{ user: User | null }>({ user: null });
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -17,22 +19,19 @@ const AuthProvider = (props: IAuthProviderProps) => {
 
     useEffect(() => {
         setLoading(true);
-        const getUser = async () => {
-            const { data } = await supabase.auth.getUser();
-            const { user: currentUser } = data;
-            setUser(currentUser ?? null);
+        getUser().then((user) => {
+            setUser(user ?? null)
+        }).finally(() => {
             setLoading(false);
-        };
-        getUser();
-    }, []);
+        });
 
-    useEffect(() => {
         const { data } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log('event', event)
-            console.log('session', session)
             if (event === "SIGNED_IN" && session) {
                 setUser(session.user);
                 setAuth(true);
+            } else if (event === "SIGNED_OUT") {
+                setUser(null);
+                setAuth(false);
             }
         });
         return () => {
